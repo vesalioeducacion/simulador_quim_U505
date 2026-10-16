@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUÍMICA - Bioenergética Celular, Matriz Estructura-Función y Razonamiento Clínico (UCCuyo)</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX for ultra-fast LaTeX formulas -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <!-- FontAwesome for biomedical icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Google Fonts: Outfit & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #f7f9f6;
+            color: #1e293b;
+        }
+
+        /* Paleta Institucional Verde Oliva UCCuyo */
+        .text-accent { color: #436600; }
+        .bg-accent { background-color: #436600; }
+        .bg-accent-hover:hover { background-color: #324d00; }
+        .bg-accent-light { background-color: #f1f6eb; }
+        .border-accent { border-color: #436600; }
+
+        .text-primary { color: #436600; }
+        .bg-primary { background-color: #436600; }
+        .bg-primary-dark { background-color: #324d00; }
+        .border-primary { border-color: #436600; }
+
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        canvas {
+            touch-action: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between text-slate-800">
+
+    <!-- Cabecera Institucional UCCuyo -->
+    <header class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-accent flex items-center justify-center text-white font-bold text-xl shadow-md">
+                    Q
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-gray-800 tracking-wide uppercase">QUÍMICA</h1>
+                    <p class="text-xs text-gray-500 font-semibold">PreMédico (Facultad de Cs. Médicas - UCCuyo)</p>
+                </div>
+            </div>
+            <!-- Botón Guía de Uso -->
+            <button onclick="openTutorial()" class="flex items-center gap-1.5 px-3 py-1.5 bg-accent text-white text-xs font-semibold rounded-lg shadow-sm hover:opacity-90 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Guía de Uso
+            </button>
+        </div>
+    </header>
+
+    <!-- Contenedor Principal con Menú Lateral y Módulos -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 flex flex-col lg:flex-row gap-6">
+
+        <!-- Menú de Navegación Lateral -->
+        <nav class="w-full lg:w-72 flex flex-row lg:flex-col gap-2 bg-white p-3.5 rounded-2xl shadow-sm border border-gray-200 overflow-x-auto lg:overflow-x-visible whitespace-nowrap lg:whitespace-normal sticky top-20 h-fit shrink-0">
+            <button onclick="switchModule(1)" id="nav-mod-1" class="nav-btn bg-accent text-white flex-1 lg:flex-none text-left py-2.5 px-3.5 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-2.5 shadow-sm">
+                <i class="fa-solid fa-battery-three-quarters text-sm w-4 text-center"></i>
+                <span>1. Bioenergética Comparada</span>
+            </button>
+            <button onclick="switchModule(2)" id="nav-mod-2" class="nav-btn text-gray-700 hover:bg-gray-100 flex-1 lg:flex-none text-left py-2.5 px-3.5 rounded-xl text-xs sm:text-sm font-medium transition flex items-center gap-2.5">
+                <i class="fa-solid fa-layer-group text-sm w-4 text-center"></i>
+                <span>2. Matriz Estructura-Función</span>
+            </button>
+            <button onclick="switchModule(3)" id="nav-mod-3" class="nav-btn text-gray-700 hover:bg-gray-100 flex-1 lg:flex-none text-left py-2.5 px-3.5 rounded-xl text-xs sm:text-sm font-medium transition flex items-center gap-2.5">
+                <i class="fa-solid fa-user-doctor text-sm w-4 text-center"></i>
+                <span>3. Razonamiento Clínico</span>
+            </button>
+        </nav>
+
+        <!-- Contenedor Dinámico de Módulos -->
+        <div class="flex-1 w-full space-y-6 min-w-0">
+<section id="modulo-1" class="module-section scroll-mt-20 space-y-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-slate-200 pb-4 gap-4">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-blue-600">Módulo 01 - Termodinámica y Oxidación</span>
+                    <h3 class="text-2xl sm:text-3xl font-display font-bold text-slate-900 mt-1">
+                        Bioenergética Celular y Densidad Energética Comparada
+                    </h3>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-600 max-w-md">
+                    Interactúa con las baterías metabólicas y el analizador de estado de oxidación del carbono para cuantificar la ventaja evolutiva de los lípidos.
+                </p>
+            </div>
+
+            <!-- 1.1 Analogía de las Baterías Metabólicas + Simulador de Masa Corporal -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Panel de Baterías Metabólicas -->
+                <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-6">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div>
+                            <h4 class="text-lg font-display font-bold text-slate-900">Analogía de las Baterías Metabólicas</h4>
+                            <p class="text-xs text-slate-500">Rendimiento termodinámico por gramo oxidado hasta $\text{CO}_2 + \text{H}_2\text{O}$</p>
+                        </div>
+                        <div class="flex items-center gap-2 bg-slate-100 p-1 rounded-xl">
+                            <button onclick="setMassSimulation(1)" id="mass-btn-1" class="px-3 py-1 rounded-lg text-xs font-bold bg-white text-slate-900 shadow-sm transition-all">1 g seco</button>
+                            <button onclick="setMassSimulation(100)" id="mass-btn-100" class="px-3 py-1 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all">100 g reserva</button>
+                            <button onclick="setMassSimulation(1000)" id="mass-btn-1000" class="px-3 py-1 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all">1 kg tejido</button>
+                        </div>
+                    </div>
+
+                    <!-- Ecuación Destacada Responsiva -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 sm:p-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-center">
+                            <div class="p-2.5 rounded-lg bg-white border border-blue-100 shadow-sm">
+                                <span class="block text-[11px] font-bold text-blue-800 uppercase tracking-wider mb-1">Glúcidos (Glucógeno)</span>
+                                <div class="text-xs sm:text-sm font-bold text-blue-700">
+                                    $$\approx 17\,\text{kJ/g} \quad (4.1\,\text{kcal/g})$$
+                                </div>
+                            </div>
+                            <div class="p-2.5 rounded-lg bg-white border border-amber-100 shadow-sm">
+                                <span class="block text-[11px] font-bold text-amber-800 uppercase tracking-wider mb-1">Lípidos (Triacilglicéridos)</span>
+                                <div class="text-xs sm:text-sm font-bold text-amber-700">
+                                    $$\approx 39\,\text{kJ/g} \quad (9.3\,\text{kcal/g})$$
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visualización de las 2 Baterías -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <!-- Batería Carbohidrato -->
+                        <div class="rounded-2xl border-2 border-blue-200 bg-blue-50/40 p-5 flex flex-col justify-between space-y-4">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <span class="text-[11px] font-bold uppercase tracking-wider text-blue-700 bg-blue-100 px-2 py-0.5 rounded">Movilización Rápida</span>
+                                    <h5 class="text-base font-bold text-slate-900 mt-1">Batería de Glucógeno</h5>
+                                    <p class="text-xs text-slate-500">Polímero polar hidratado ($-\text{OH}$)</p>
+                                </div>
+                                <span class="font-mono text-lg font-bold text-blue-700">17 kJ/g</span>
+                            </div>
+
+                            <!-- Gráfico de Batería -->
+                            <div class="space-y-1.5">
+                                <div class="flex justify-between text-xs font-semibold">
+                                    <span class="text-slate-600">Densidad Calórica Relativa</span>
+                                    <span class="text-blue-700">43.6%</span>
+                                </div>
+                                <div class="w-full h-7 bg-slate-200 rounded-lg p-1 relative flex items-center">
+                                    <div class="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-md transition-all duration-500 flex items-center justify-end pr-2 text-[10px] font-bold text-white" style="width: 43.6%">
+                                        17 kJ/g
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Resultados Dinámicos según Masa -->
+                            <div class="bg-white rounded-xl p-3 border border-blue-100 space-y-1.5 text-xs">
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">Energía total liberada:</span>
+                                    <strong id="carb-energy-val" class="font-mono text-blue-700">17 kJ (4.06 kcal)</strong>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">Agua de solvatación asociada:</span>
+                                    <strong id="carb-water-val" class="font-mono text-slate-700">+ 2.0 g de $\text{H}_2\text{O}$</strong>
+                                </div>
+                                <div class="flex justify-between border-t border-slate-100 pt-1">
+                                    <span class="text-slate-600 font-medium">Peso fisiológico real:</span>
+                                    <strong id="carb-total-weight" class="font-mono text-slate-900">3.0 g húmedos</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Batería Lípidos -->
+                        <div class="rounded-2xl border-2 border-amber-400 bg-amber-50/50 p-5 flex flex-col justify-between space-y-4 amber-glow">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <span class="text-[11px] font-bold uppercase tracking-wider text-amber-800 bg-amber-200 px-2 py-0.5 rounded">Reserva de Alta Densidad</span>
+                                    <h5 class="text-base font-bold text-slate-900 mt-1">Batería de Triacilglicéridos</h5>
+                                    <p class="text-xs text-slate-500">Reserva apolar anhidra ($\text{C}-\text{H}$)</p>
+                                </div>
+                                <span class="font-mono text-lg font-bold text-amber-600">39 kJ/g</span>
+                            </div>
+
+                            <!-- Gráfico de Batería -->
+                            <div class="space-y-1.5">
+                                <div class="flex justify-between text-xs font-semibold">
+                                    <span class="text-slate-600">Densidad Calórica Relativa</span>
+                                    <span class="text-amber-700">100% (2.3x más)</span>
+                                </div>
+                                <div class="w-full h-7 bg-slate-200 rounded-lg p-1 relative flex items-center">
+                                    <div class="h-full bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 rounded-md transition-all duration-500 flex items-center justify-end pr-2 text-[10px] font-bold text-slate-950" style="width: 100%">
+                                        39 kJ/g
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Resultados Dinámicos según Masa -->
+                            <div class="bg-white rounded-xl p-3 border border-amber-200 space-y-1.5 text-xs">
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">Energía total liberada:</span>
+                                    <strong id="lipid-energy-val" class="font-mono text-amber-700">39 kJ (9.32 kcal)</strong>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">Agua de solvatación asociada:</span>
+                                    <strong class="font-mono text-emerald-700">0.0 g (Anhidro)</strong>
+                                </div>
+                                <div class="flex justify-between border-t border-slate-100 pt-1">
+                                    <span class="text-slate-600 font-medium">Peso fisiológico real:</span>
+                                    <strong id="lipid-total-weight" class="font-mono text-slate-900">1.0 g compacto</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nota Fisiológica Evolutiva -->
+                    <div class="bg-slate-900 text-slate-100 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div class="space-y-1">
+                            <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Impacto Evolutivo en el Ser Humano (70 kg)</span>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                Como los triacilglicéridos almacenan $\approx 2.3\text{ veces}$ más energía por gramo seco y <strong>no retienen los $2\,\text{g}$ de $\text{H}_2\text{O}$ por gramo</strong> que exige el glucógeno polar, un depósito graso de $15\,\text{kg}$ equivale energéticamente a cargar más de <strong>$100\,\text{kg}$ de glucógeno hidratado</strong>, permitiendo la locomoción eficiente y la supervivencia en ayuno prolongado.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1.2 Justificación Químico-Orgánica: Visualizador del Estado de Oxidación del Carbono -->
+                <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col justify-between space-y-5">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-amber-600">Justificación Químico-Orgánica</span>
+                        <h4 class="text-lg font-display font-bold text-slate-900 mt-0.5">
+                            Visualizador del Estado de Oxidación del Carbono
+                        </h4>
+                        <p class="text-xs text-slate-600 mt-1">
+                            Selecciona un carbono representativo para inspeccionar su número de oxidación formal y el flujo de electrones ($\text{e}^-$) hacia $\text{NAD}^+$ y $\text{FAD}$ en la mitocondria:
+                        </p>
+                    </div>
+
+                    <!-- Botones de Selección de Estado de Oxidación -->
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="selectOxidationState('lipid')" id="ox-btn-lipid" class="p-2.5 rounded-xl border-2 border-amber-500 bg-amber-50 text-left transition-all">
+                            <span class="text-[10px] font-bold uppercase text-amber-800 block">Lípido (Alifático)</span>
+                            <span class="font-mono text-sm font-bold text-slate-900">$-\text{CH}_2-$</span>
+                            <span class="block text-[11px] font-semibold text-amber-700 mt-0.5">Estado: $-2$</span>
+                        </button>
+                        <button onclick="selectOxidationState('carb')" id="ox-btn-carb" class="p-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-left transition-all">
+                            <span class="text-[10px] font-bold uppercase text-blue-700 block">Carbohidrato</span>
+                            <span class="font-mono text-sm font-bold text-slate-900">$-\text{CH(OH)}-$</span>
+                            <span class="block text-[11px] font-semibold text-blue-700 mt-0.5">Estado: $0$</span>
+                        </button>
+                        <button onclick="selectOxidationState('co2')" id="ox-btn-co2" class="p-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-left transition-all">
+                            <span class="text-[10px] font-bold uppercase text-slate-500 block">Producto Final</span>
+                            <span class="font-mono text-sm font-bold text-slate-900">$\text{O}=\text{C}=\text{O}$</span>
+                            <span class="block text-[11px] font-semibold text-slate-600 mt-0.5">Estado: $+4$</span>
+                        </button>
+                    </div>
+
+                    <!-- SVG Interactivo del Estado de Oxidación -->
+                    <div class="bg-slate-900 rounded-xl p-4 text-white relative overflow-hidden">
+                        <div id="ox-svg-container" class="w-full h-40 flex items-center justify-center">
+                            <!-- Renderizado dinámico por JS -->
+                        </div>
+                        <div class="border-t border-slate-800 pt-3 mt-2 flex items-center justify-between text-xs">
+                            <div>
+                                <span class="text-slate-400">Electrones cedidos por átomo de C hasta $\text{CO}_2$:</span>
+                                <strong id="ox-electrons-count" class="text-amber-400 font-mono text-sm ml-1">6 e-</strong>
+                            </div>
+                            <span id="ox-atp-badge" class="px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30 font-semibold">
+                                Máximo flujo de NADH y FADH2
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Explicación dinámica -->
+                    <div id="ox-explanation-box" class="bg-amber-50/70 border border-amber-200 rounded-xl p-3.5 text-xs text-slate-700 leading-relaxed">
+                        <strong>Cadena Alifática Reducida ($-\text{CH}_2-$):</strong> El carbono está saturado de enlaces $\text{C}-\text{H}$ apolares donde el carbono es más electronegativo que el hidrógeno (estado de oxidación $=-2$). Al oxidarse en la $\beta$-oxidación y el ciclo de Krebs hasta $\text{CO}_2$ (estado $+4$), cede <strong>$6\,\text{e}^-$ por carbono</strong> a $\text{NAD}^+$ y $\text{FAD}$, impulsando masivamente la síntesis de $\text{ATP}$ en la cadena respiratoria mitocondrial.
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1.3 Estrategia Fisiológico-Evolutiva: Comparador Funcional -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-blue-600">Estrategia Fisiológico-Evolutiva</span>
+                        <h4 class="text-lg font-display font-bold text-slate-900">
+                            Comparador Funcional del Uso Metabólico: Corto Plazo vs. Ayuno Prolongado
+                        </h4>
+                    </div>
+                    <!-- Conmutador de Escenario Fisiológico -->
+                    <div class="inline-flex bg-slate-100 p-1 rounded-xl border border-slate-200 self-start">
+                        <button onclick="switchMetabolicScenario('sprint')" id="scen-btn-sprint" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white shadow-sm transition-all">
+                             Esfuerzo Agudo / Corto Plazo
+                        </button>
+                        <button onclick="switchMetabolicScenario('fasting')" id="scen-btn-fasting" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-slate-900 transition-all">
+                             Ayuno Prolongado / Reposo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Contenido Comparativo Dinámico -->
+                <div id="scenario-display" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Poblado dinámicamente o estático enriquecido -->
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================================
+             MÓDULO 2: MATRIZ INTEGRADORA ESTRUCTURA -> PROPIEDAD -> FUNCIÓN
+             ===================================================================== -->
+        <section id="modulo-2" class="module-section hidden scroll-mt-20 space-y-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-slate-200 pb-4 gap-4">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-amber-600">Módulo 02 - Arquitectura Molecular</span>
+                    <h3 class="text-2xl sm:text-3xl font-display font-bold text-slate-900 mt-1">
+                        Matriz Integradora: Estructura $\to$ Propiedad $\to$ Función
+                    </h3>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-600 max-w-md">
+                    Explora los 4 niveles jerárquicos de organización lipídica. Selecciona cada nivel para analizar cómo la geometría covalente dicta el comportamiento fisicoquímico y biológico.
+                </p>
+            </div>
+
+            <!-- Selector de Niveles (1 a 4) -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                <button onclick="selectMatrixLevel(1)" id="matrix-tab-1" class="matrix-tab p-4 rounded-2xl border-2 border-amber-500 bg-amber-50/70 text-left transition-all shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider text-amber-800 bg-amber-200/80 px-2 py-0.5 rounded">Nivel 1</span>
+                        <span class="text-xs font-mono text-amber-700">R-COOH</span>
+                    </div>
+                    <h4 class="text-base font-display font-bold text-slate-900 mt-2">Ácidos Grasos</h4>
+                    <p class="text-xs text-slate-600 mt-0.5">Monómeros alifáticos rectos o acodados (cis)</p>
+                </button>
+
+                <button onclick="selectMatrixLevel(2)" id="matrix-tab-2" class="matrix-tab p-4 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-left transition-all">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-600 bg-slate-100 px-2 py-0.5 rounded">Nivel 2</span>
+                        <span class="text-xs font-mono text-slate-500">3 Ésteres</span>
+                    </div>
+                    <h4 class="text-base font-display font-bold text-slate-900 mt-2">Triacilglicéridos</h4>
+                    <p class="text-xs text-slate-600 mt-0.5">Glicerol + 3 AG neutros e hidrofóbicos</p>
+                </button>
+
+                <button onclick="selectMatrixLevel(3)" id="matrix-tab-3" class="matrix-tab p-4 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-left transition-all">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-600 bg-slate-100 px-2 py-0.5 rounded">Nivel 3</span>
+                        <span class="text-xs font-mono text-slate-500"> $-\text{PO}_4^-$ + 2 AG</span>
+                    </div>
+                    <h4 class="text-base font-display font-bold text-slate-900 mt-2">Fosfolípidos</h4>
+                    <p class="text-xs text-slate-600 mt-0.5">Carácter anfipático y bicapa lipídica</p>
+                </button>
+
+                <button onclick="selectMatrixLevel(4)" id="matrix-tab-4" class="matrix-tab p-4 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-left transition-all">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-600 bg-slate-100 px-2 py-0.5 rounded">Nivel 4</span>
+                        <span class="text-xs font-mono text-slate-500">4 Anillos A-B-C-D</span>
+                    </div>
+                    <h4 class="text-base font-display font-bold text-slate-900 mt-2">Esteroides</h4>
+                    <p class="text-xs text-slate-600 mt-0.5">Ciclopentanoperhidrofenantreno rígido</p>
+                </button>
+            </div>
+
+            <!-- Panel Detallado Interactivo del Nivel Seleccionado -->
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+                <!-- Cabecera del Nivel -->
+                <div class="bg-slate-900 text-white p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <span id="matrix-level-badge" class="text-xs font-bold uppercase tracking-widest text-amber-400">Nivel 1 - Bloques Monoméricos</span>
+                        <h4 id="matrix-level-title" class="text-xl sm:text-2xl font-display font-bold mt-1">Ácidos Grasos: Geometría de Enlaces y Fuerzas de London</h4>
+                    </div>
+                    <div id="matrix-level-formula" class="bg-slate-800/90 border border-slate-700 px-4 py-2 rounded-xl text-xs sm:text-sm font-mono text-amber-300">
+                        $$\text{CH}_3-(\text{CH}_2)_n-\text{COOH}$$
+                    </div>
+                </div>
+
+                <!-- Cuerpo del Nivel: Visor Molecular SVG + Columnas Estructura -> Propiedad -> Función -->
+                <div class="p-6 lg:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <!-- Visor Molecular Interactivo SVG -->
+                    <div class="lg:col-span-5 bg-slate-50 rounded-2xl border border-slate-200 p-5 flex flex-col items-center justify-between space-y-4">
+                        <div class="w-full flex items-center justify-between">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Representación Estructural</span>
+                            <span id="matrix-svg-caption" class="text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200">Configuración lineal vs. cis</span>
+                        </div>
+
+                        <div id="matrix-svg-stage" class="w-full h-64 flex items-center justify-center bg-white rounded-xl border border-slate-200 p-3">
+                            <!-- Inyectado dinámicamente -->
+                        </div>
+
+                        <!-- Sub-control interactivo exclusivo para el visor si aplica -->
+                        <div id="matrix-interactive-controls" class="w-full">
+                            <!-- Controles contextuales -->
+                        </div>
+                    </div>
+
+                    <!-- Flujo Causa-Efecto: Estructura -> Propiedad -> Función -->
+                    <div class="lg:col-span-7 space-y-4">
+                        <!-- Tarjeta 1: ESTRUCTURA -->
+                        <div class="p-5 rounded-2xl border-l-4 border-l-blue-600 border border-slate-200 bg-blue-50/20 hover:bg-blue-50/40 transition-all">
+                            <div class="flex items-center gap-2 mb-1.5">
+                                <span class="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center">1</span>
+                                <h5 class="text-sm font-bold uppercase tracking-wider text-blue-800">Estructura Química</h5>
+                            </div>
+                            <div id="matrix-col-estructura" class="text-sm text-slate-700 leading-relaxed">
+                                <!-- Contenido dinámico -->
+                            </div>
+                        </div>
+
+                        <!-- Conector Flecha -->
+                        <div class="flex items-center justify-center text-slate-400 text-xs font-semibold gap-2">
+                            <span>Determina directamente</span>
+                            <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                        </div>
+
+                        <!-- Tarjeta 2: PROPIEDAD FISICOQUÍMICA -->
+                        <div class="p-5 rounded-2xl border-l-4 border-l-amber-500 border border-slate-200 bg-amber-50/20 hover:bg-amber-50/40 transition-all">
+                            <div class="flex items-center gap-2 mb-1.5">
+                                <span class="w-6 h-6 rounded-full bg-amber-500 text-slate-950 text-xs font-bold flex items-center justify-center">2</span>
+                                <h5 class="text-sm font-bold uppercase tracking-wider text-amber-800">Propiedad Fisicoquímica</h5>
+                            </div>
+                            <div id="matrix-col-propiedad" class="text-sm text-slate-700 leading-relaxed">
+                                <!-- Contenido dinámico -->
+                            </div>
+                        </div>
+
+                        <!-- Conector Flecha -->
+                        <div class="flex items-center justify-center text-slate-400 text-xs font-semibold gap-2">
+                            <span>Habilita en el organismo</span>
+                            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                        </div>
+
+                        <!-- Tarjeta 3: FUNCIÓN BIOLÓGICA Y MÉDICA -->
+                        <div class="p-5 rounded-2xl border-l-4 border-l-emerald-600 border border-slate-200 bg-emerald-50/20 hover:bg-emerald-50/40 transition-all">
+                            <div class="flex items-center gap-2 mb-1.5">
+                                <span class="w-6 h-6 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center justify-center">3</span>
+                                <h5 class="text-sm font-bold uppercase tracking-wider text-emerald-800">Función Biológica y Biomédica</h5>
+                            </div>
+                            <div id="matrix-col-funcion" class="text-sm text-slate-700 leading-relaxed">
+                                <!-- Contenido dinámico -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla Resumen Comparativa Rápida (Vista Global de los 4 Niveles) -->
+                <div class="border-t border-slate-200 bg-slate-50 p-6">
+                    <details class="group">
+                        <summary class="flex items-center justify-between cursor-pointer list-none">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-bold uppercase tracking-wider text-slate-700 bg-white px-2.5 py-1 rounded-md border border-slate-200 shadow-sm">Cuadro Sinóptico de Estudio</span>
+                                <span class="text-sm font-semibold text-slate-700">Ver Matriz Comparativa Completa de los 4 Niveles</span>
+                            </div>
+                            <span class="text-xs font-bold text-blue-600 group-open:rotate-180 transition-transform"></span>
+                        </summary>
+                        <div class="mt-4 overflow-x-auto">
+                            <table class="w-full text-left border-collapse bg-white rounded-xl overflow-hidden border border-slate-200 text-xs">
+                                <thead>
+                                    <tr class="bg-slate-900 text-white">
+                                        <th class="p-3 font-semibold">Nivel Lipídico</th>
+                                        <th class="p-3 font-semibold">Estructura Química Clave</th>
+                                        <th class="p-3 font-semibold">Propiedad Emergente</th>
+                                        <th class="p-3 font-semibold">Función Fisiológica Principal</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200">
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3 font-bold text-slate-900">1. Ácidos Grasos</td>
+                                        <td class="p-3 text-slate-700">Cadenas alifáticas pares ($-\text{CH}_2-$), rectas (saturadas) o con quiebres $\text{cis}$ ($\text{C}=\text{C}$).</td>
+                                        <td class="p-3 text-slate-700">Saturados: sólidos (altas fuerzas de London). Insaturados: líquidos a $37\,^\circ\text{C}$.</td>
+                                        <td class="p-3 text-slate-700">Monómeros estructurales para lípidos complejos y sustrato de $\beta$-oxidación.</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3 font-bold text-slate-900">2. Triacilglicéridos</td>
+                                        <td class="p-3 text-slate-700">Glicerol esterificado con 3 ácidos grasos (elimina los 3 grupos $-\text{OH}$ polares).</td>
+                                        <td class="p-3 text-slate-700">Molécula 100% neutra, apolar, hidrofóbica e insoluble en agua.</td>
+                                        <td class="p-3 text-slate-700">Reserva energética anhidra ($\approx 39\,\text{kJ/g}$) y aislamiento térmico en adipocitos.</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3 font-bold text-slate-900">3. Fosfolípidos</td>
+                                        <td class="p-3 text-slate-700">Glicerol + 2 colas de ácidos grasos + 1 grupo fosfato polar/iónico ($-\text{PO}_4^-$).</td>
+                                        <td class="p-3 text-slate-700">Carácter anfipático (cabeza polar hidrofílica y dos colas apolares hidrofóbicas).</td>
+                                        <td class="p-3 text-slate-700">Autoensamblaje en bicapas lipídicas selectivas que delimitan la célula.</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3 font-bold text-slate-900">4. Esteroides</td>
+                                        <td class="p-3 text-slate-700">Núcleo tetracíclico rígido de 4 anillos fusionados (ciclopentanoperhidrofenantreno).</td>
+                                        <td class="p-3 text-slate-700">Geometría plana, rígida, hidrofóbica e intercalable entre colas acilo.</td>
+                                        <td class="p-3 text-slate-700">Amortiguador de fluidez de membrana (colesterol) y precursor de hormonas esteroideas.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================================
+             MÓDULO 3: LABORATORIO DE RAZONAMIENTO CLÍNICO Y REFLEXIÓN BIOMÉDICA
+             ===================================================================== -->
+        <section id="modulo-3" class="module-section hidden scroll-mt-20 space-y-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-slate-200 pb-4 gap-4">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-blue-600">Módulo 03 - Simulación y Correlación Médica</span>
+                    <h3 class="text-2xl sm:text-3xl font-display font-bold text-slate-900 mt-1">
+                        Laboratorio de Razonamiento Clínico y Reflexión Biomédica
+                    </h3>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-600 max-w-md">
+                    Experimenta con los tres paneles interactivos y resuelve la pregunta de integración clínica en cada escenario para validar tu razonamiento pre-médico.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                <!-- =========================================================
+                     PANEL 1: ESTRUCTURAL - ESTADO FÍSICO (MANTEQUILLA VS ACEITE)
+                     ========================================================= -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between overflow-hidden">
+                    <div class="p-6 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold uppercase tracking-wider text-amber-800 bg-amber-100 px-2.5 py-1 rounded-md">Panel 1 - Estructural</span>
+                            <span class="text-xs font-mono text-slate-500">Fuerzas de London</span>
+                        </div>
+                        <h4 class="text-lg font-display font-bold text-slate-900">
+                            Empaquetamiento Molecular: Mantequilla vs. Aceite de Oliva
+                        </h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            ¿Por qué la mantequilla (rica en ácido palmítico/esteárico saturado) es sólida en refrigeración ($4\,^\circ\text{C}$) y a $20\,^\circ\text{C}$, mientras el aceite de oliva (rico en ácido oleico $\text{cis}-\Delta^9$) permanece líquido?
+                        </p>
+
+                        <!-- Control de Simulación de Empaquetamiento -->
+                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-3">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="font-semibold text-slate-700">Fracción de dobles enlaces $\text{cis}$ ($\text{C}=\text{C}$):</span>
+                                <span id="packing-cis-label" class="font-mono font-bold text-amber-700">0% (Mantequilla - Sólida)</span>
+                            </div>
+                            <input type="range" id="packing-slider" min="0" max="100" step="50" value="0" oninput="updatePackingSimulation(this.value)" class="w-full accent-amber-500 cursor-pointer">
+                            <div class="flex justify-between text-[10px] text-slate-500 font-medium">
+                                <span>100% Saturado (Recto)</span>
+                                <span>Mezcla Semisólida</span>
+                                <span>Predominio $\text{cis}$ (Aceite)</span>
+                            </div>
+
+                            <!-- SVG del Empaquetamiento -->
+                            <div id="packing-svg-box" class="h-36 bg-slate-900 rounded-lg p-3 flex items-center justify-center">
+                                <!-- Renderizado dinámico -->
+                            </div>
+
+                            <!-- Indicadores Termodinámicos -->
+                            <div class="grid grid-cols-2 gap-2 text-xs">
+                                <div class="bg-white p-2 rounded border border-slate-200">
+                                    <span class="text-slate-400 block text-[10px]">Distancia Intercatenaria</span>
+                                    <strong id="packing-distance" class="text-slate-800">Mínima (Cristalino)</strong>
+                                </div>
+                                <div class="bg-white p-2 rounded border border-slate-200">
+                                    <span class="text-slate-400 block text-[10px]">Punto de Fusión ($T_m$)</span>
+                                    <strong id="packing-tm" class="text-amber-700">$\approx 63\,^\circ\text{C}$ (Sólido)</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mini-Desafío Clínico Panel 1 -->
+                        <div class="border-t border-slate-200 pt-4 space-y-2.5">
+                            <p class="text-xs font-bold text-slate-800">
+                                 Pregunta de Razonamiento 1: ¿Cuál es la causa física directa de que el aceite de oliva tenga menor punto de fusión?
+                            </p>
+                            <div class="space-y-1.5">
+                                <button onclick="checkClinicalAnswer(1, 'A')" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs text-slate-700 transition-all">
+                                    A) Los dobles enlaces $\text{cis}$ introducen un quiebre rígido ($\approx 30^\circ$) que impide el empaquetamiento estrecho y debilita las fuerzas de dispersión de London.
+                                </button>
+                                <button onclick="checkClinicalAnswer(1, 'B')" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs text-slate-700 transition-all">
+                                    B) Los ácidos grasos insaturados forman puentes de hidrógeno entre sus dobles enlaces $\text{C}=\text{C}$ con el agua.
+                                </button>
+                            </div>
+                            <div id="feedback-panel-1" class="hidden p-3 rounded-xl text-xs leading-relaxed"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- =========================================================
+                     PANEL 2: FISIOLÓGICO - LISIS CELULAR
+                     ========================================================= -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between overflow-hidden">
+                    <div class="p-6 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold uppercase tracking-wider text-blue-800 bg-blue-100 px-2.5 py-1 rounded-md">Panel 2 - Fisiológico</span>
+                            <span class="text-xs font-mono text-slate-500">Efecto Hidrofóbico</span>
+                        </div>
+                        <h4 class="text-lg font-display font-bold text-slate-900">
+                            Experimento Mental: ¿Y si los Lípidos de Membrana fueran Hidrofílicos?
+                        </h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Simula qué ocurriría con un eritrocito o hepatocito inmerso en el medio acuoso intersticial si las colas acilo de sus fosfolípidos perdieran su hidrofobicidad y fueran polares/hidrofílicas.
+                        </p>
+
+                        <!-- Simulador de Integridad de Membrana -->
+                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-semibold text-slate-700">Estado de las colas lipídicas:</span>
+                                <div class="inline-flex rounded-lg bg-slate-200 p-0.5">
+                                    <button onclick="setMembraneState('amphipathic')" id="memb-btn-normal" class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-white text-emerald-700 shadow-sm transition-all">
+                                        Anfipático Normal
+                                    </button>
+                                    <button onclick="setMembraneState('hydrophilic')" id="memb-btn-lysis" class="px-2.5 py-1 rounded-md text-[11px] font-semibold text-slate-700 hover:text-rose-700 transition-all">
+                                        Mutación Hidrofílica
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- SVG de la Membrana / Lisis -->
+                            <div id="membrane-svg-box" class="h-36 bg-slate-900 rounded-lg p-3 flex items-center justify-center">
+                                <!-- Renderizado dinámico -->
+                            </div>
+
+                            <div id="membrane-status-banner" class="bg-emerald-50 border border-emerald-200 text-emerald-900 p-2.5 rounded-lg text-xs">
+                                <strong>Homeostasis Intacta:</strong> Las colas apolares excluyen el $\text{H}_2\text{O}$ y mantienen el gradiente iónico ($\text{Na}^+/\text{K}^+$).
+                            </div>
+                        </div>
+
+                        <!-- Mini-Desafío Clínico Panel 2 -->
+                        <div class="border-t border-slate-200 pt-4 space-y-2.5">
+                            <p class="text-xs font-bold text-slate-800">
+                                 Pregunta de Razonamiento 2: Si los fosfolípidos fueran completamente hidrofílicos, ¿qué sucedería instantáneamente con la célula?
+                            </p>
+                            <div class="space-y-1.5">
+                                <button onclick="checkClinicalAnswer(2, 'A')" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs text-slate-700 transition-all">
+                                    A) La membrana se volvería más rígida e impermeable a la glucosa.
+                                </button>
+                                <button onclick="checkClinicalAnswer(2, 'B')" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs text-slate-700 transition-all">
+                                    B) Disolución espontánea de la bicapa en el medio acuoso extra e intracelular, pérdida de compartimentalización y lisis celular inmediata.
+                                </button>
+                            </div>
+                            <div id="feedback-panel-2" class="hidden p-3 rounded-xl text-xs leading-relaxed"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- =========================================================
+                     PANEL 3: BIOMÉDICO - LA PARADOJA DEL COLESTEROL
+                     ========================================================= -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between overflow-hidden">
+                    <div class="p-6 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold uppercase tracking-wider text-rose-800 bg-rose-100 px-2.5 py-1 rounded-md">Panel 3 - Biomédico</span>
+                            <span class="text-xs font-mono text-slate-500">Fisiología vs. Patología</span>
+                        </div>
+                        <h4 class="text-lg font-display font-bold text-slate-900">
+                            La Paradoja del Colesterol: Molécula Vital vs. Riesgo Aterogénico
+                        </h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Ajusta la concentración plasmática y tisular de colesterol ($\text{LDL}$ plasmático) para contrastar sus funciones fisiológicas indispensables frente a la patogénesis de la placa de ateroma.
+                        </p>
+
+                        <!-- Simulador de Nivel de Colesterol -->
+                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-3">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="font-semibold text-slate-700">Escenario Fisiopatológico:</span>
+                                <span id="chol-level-badge" class="font-mono font-bold text-emerald-700">Fisiológico (Homeostasis)</span>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="setCholesterolMode('physiological')" id="chol-btn-phys" class="p-2 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow-sm transition-all">
+                                     Rol Fisiológico Esencial
+                                </button>
+                                <button onclick="setCholesterolMode('pathological')" id="chol-btn-path" class="p-2 rounded-lg text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-rose-50 transition-all">
+                                     Exceso Plasmático (LDL)
+                                </button>
+                            </div>
+
+                            <!-- SVG Arteria / Derivados Esteroideos -->
+                            <div id="cholesterol-svg-box" class="h-36 bg-slate-900 rounded-lg p-3 flex items-center justify-center">
+                                <!-- Renderizado dinámico -->
+                            </div>
+
+                            <div id="cholesterol-detail-text" class="bg-white border border-slate-200 p-2.5 rounded-lg text-xs text-slate-700 leading-relaxed">
+                                <!-- Texto dinámico -->
+                            </div>
+                        </div>
+
+                        <!-- Mini-Desafío Clínico Panel 3 -->
+                        <div class="border-t border-slate-200 pt-4 space-y-2.5">
+                            <p class="text-xs font-bold text-slate-800">
+                                 Pregunta de Razonamiento 3: ¿Por qué sería incompatible con la vida eliminar el $100\%$ del colesterol endógeno?
+                            </p>
+                            <div class="space-y-1.5">
+                                <button onclick="checkClinicalAnswer(3, 'A')" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs text-slate-700 transition-all">
+                                    A) Porque es indispensable para modular la estabilidad mecánica de la membrana y es el precursor de sales biliares, cortisol, aldosterona, estrógenos y testosterona.
+                                </button>
+                                <button onclick="checkClinicalAnswer(3, 'B')" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs text-slate-700 transition-all">
+                                    B) Porque el colesterol se oxida en la mitocondria para producir $39\,\text{kJ/g}$ de $\text{ATP}$ durante el ejercicio.
+                                </button>
+                            </div>
+                            <div id="feedback-panel-3" class="hidden p-3 rounded-xl text-xs leading-relaxed"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    
+        </div>
+    </main>
+
+    <!-- Modal Tutorial / Guía de Uso -->
+    <div id="tutorial-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-3xl w-full p-6 sm:p-7 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto custom-scroll">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+                <div class="flex items-center gap-2.5 text-accent">
+                    <i class="fa-solid fa-book-open-reader text-xl"></i>
+                    <h3 class="text-base sm:text-lg font-bold text-gray-900 uppercase tracking-wide">Guía de Uso del Simulador Interactivo</h3>
+                </div>
+                <button onclick="closeTutorial()" class="text-gray-400 hover:text-gray-600 text-2xl font-bold">&times;</button>
+            </div>
+            
+            <div class="space-y-4 text-xs sm:text-sm text-gray-600 leading-relaxed">
+                <p>
+                    Bienvenido al <strong>Simulador Interactivo de Lípidos: Bioenergética Celular, Matriz Estructura-Propiedad-Función y Aplicaciones Biomédicas</strong> para aspirantes a la carrera de Medicina (Facultad de Ciencias Médicas - Universidad Católica de Cuyo).
+                </p>
+
+                <div class="space-y-3">
+                    <h4 class="font-bold text-gray-800 text-sm flex items-center gap-2 border-b border-gray-100 pb-1.5">
+                        <i class="fa-solid fa-compass text-accent"></i>
+                        Estructura de los Módulos de Aprendizaje
+                    </h4>
+
+                    <!-- Módulo 1 -->
+                    <div class="p-3.5 bg-slate-50 rounded-xl border border-gray-200 space-y-2">
+                        <div class="font-bold text-gray-900 text-xs sm:text-sm flex items-center gap-2 text-accent">
+                            <i class="fa-solid fa-battery-three-quarters"></i> 1. Bioenergética Celular & Densidad Energética Comparada
+                        </div>
+                        <ul class="list-disc list-inside space-y-1.5 text-xs text-gray-700 ml-1">
+                            <li><strong>Simulador de Masas y Baterías Metabólicas:</strong> Conmuta entre $1\,\text{g}$ seco, $100\,\text{g}$ de reserva y $1\,\text{kg}$ de tejido para comparar en tiempo real la liberación calórica ($17\,\text{kJ/g} \approx 4.1\,\text{kcal/g}$ en glúcidos vs. $39\,\text{kJ/g} \approx 9.3\,\text{kcal/g}$ en lípidos) y el peso del agua de solvatación asociada ($2\,\text{g}\,\text{H}_2\text{O}/\text{g}$ en glucógeno vs. $0\,\text{g}$ anhidro en triacilglicéridos).</li>
+                            <li><strong>Visualizador del Estado de Oxidación del Carbono:</strong> Selecciona entre lípido ($-\text{CH}_2-$, estado $-2$), glúcido ($-\text{CH(OH)}-$, estado $0$) y $\text{CO}_2$ ($+4$) para ver los electrones cedidos ($6\,\text{e}^-$ vs. $4\,\text{e}^-$) a los transportadores reducidos ($\text{NADH}$ y $\text{FADH}_2$) hacia la cadena respiratoria mitocondrial.</li>
+                            <li><strong>Comparador Funcional Evolutivo:</strong> Contrasta los escenarios de <em>Esfuerzo Agudo / Corto Plazo</em> (glucógeno muscular y hepático de movilización rápida) frente a <em>Ayuno Prolongado / Reposo</em> (reserva adipocitaria compacta y liviana para locomoción eficiente).</li>
+                        </ul>
+                    </div>
+
+                    <!-- Módulo 2 -->
+                    <div class="p-3.5 bg-slate-50 rounded-xl border border-gray-200 space-y-2">
+                        <div class="font-bold text-gray-900 text-xs sm:text-sm flex items-center gap-2 text-accent">
+                            <i class="fa-solid fa-layer-group"></i> 2. Matriz Estructura $\to$ Propiedad $\to$ Función
+                        </div>
+                        <ul class="list-disc list-inside space-y-1.5 text-xs text-gray-700 ml-1">
+                            <li><strong>Navegación Dinámica por 4 Niveles:</strong> Explora los bloques fundamentales seleccionando cada pestaña:
+                                <ul class="list-circle list-inside ml-4 mt-1 space-y-1 text-slate-600">
+                                    <li><em>Nivel 1 (Ácidos Grasos):</em> Cadenas lineales saturadas sólidas vs. acodadas <em>cis</em> líquidas; monómeros de construcción y regulador interactivo de temperatura de fusión.</li>
+                                    <li><em>Nivel 2 (Triacilglicéridos):</em> Glicerol esterificado con 3 ácidos grasos sin $-\text{OH}$ libres; neutro, apolar y reserva anhidra en adipocitos.</li>
+                                    <li><em>Nivel 3 (Fosfolípidos):</em> Esqueleto con 2 colas apolares y 1 grupo fosfato polar iónico; carácter anfipático estricto y ensamblaje espontáneo en bicapa lipídica.</li>
+                                    <li><em>Nivel 4 (Esteroides):</em> Núcleo rígido tetracíclico de ciclopentanoperhidrofenantreno; modulación de fluidez de membrana (colesterol) y precursor de hormonas esteroideas y sales biliares.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Visor Molecular y Tabla Comparativa:</strong> Visualiza estructuras químicas vectoriales y consulta la tabla sinóptica integradora con enlaces éster y fuerzas intermoleculares de London.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Módulo 3 -->
+                    <div class="p-3.5 bg-slate-50 rounded-xl border border-gray-200 space-y-2">
+                        <div class="font-bold text-gray-900 text-xs sm:text-sm flex items-center gap-2 text-accent">
+                            <i class="fa-solid fa-user-doctor"></i> 3. Laboratorio de Razonamiento Clínico & Biomédico
+                        </div>
+                        <ul class="list-disc list-inside space-y-1.5 text-xs text-gray-700 ml-1">
+                            <li><strong>Panel 1 (Estructural - Estado Físico):</strong> Desliza el control de proporción de insaturaciones <em>cis</em> vs. cadenas saturadas para analizar el empaquetamiento molecular y deducir por qué la mantequilla es sólida en heladera y el aceite de oliva líquido.</li>
+                            <li><strong>Panel 2 (Fisiológico - Lisis Celular):</strong> Conmuta la membrana entre lípidos anfipáticos normales (bicapa intacta) e hidrofílicos hipotéticos (disolución instantánea en medio acuoso y lisis celular masiva).</li>
+                            <li><strong>Panel 3 (Biomédico - Paradoja del Colesterol):</strong> Contrasta el estado fisiológico de síntesis hormonal y estabilidad de membrana frente al exceso plasmático ($\text{LDL}$) que desencadena placas de ateroma, estenosis vascular e isquemia tisular.</li>
+                            <li><strong>Autoevaluación Formativa con Marcador:</strong> Responde a los 3 desafíos de razonamiento médico con retroalimentación explicativa inmediata y registro dinámico en el marcador de dominio superior.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="p-3.5 bg-amber-50 rounded-xl border border-amber-200 text-amber-800 space-y-1.5">
+                    <h4 class="font-bold flex items-center gap-1.5 text-xs sm:text-sm">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        Recomendaciones Didácticas para el Examen
+                    </h4>
+                    <p class="text-xs leading-relaxed">
+                        Experimenta con los controles interactivos de masa, oxidación y empaquetamiento antes de responder los desafíos formativos. El principio central a dominar para el ingreso a Medicina de la Universidad Católica de Cuyo es la deducción lógica de cómo la conformación geométrica y polaridad molecular determinan directamente el comportamiento fisiopatológico humano.
+                    </p>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-gray-100 flex justify-end">
+                <button onclick="closeTutorial()" class="px-5 py-2.5 bg-accent text-white text-xs sm:text-sm font-semibold rounded-xl hover:bg-accent-hover transition shadow-sm">
+                    Entendido, comenzar exploración
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pie de Página Institucional Obligatorio -->
+    <footer class="bg-white border-t border-gray-200 py-4 mt-8 text-center text-xs text-gray-500">
+        Desarrollado por vesalio - Todos los derechos reservados
+    </footer>
+
+    <!-- Script Principal -->
+    <script>
+
+        function switchModule(modIndex) {
+            for (let i = 1; i <= 3; i++) {
+                const sec = document.getElementById(`modulo-${i}`);
+                const tab = document.getElementById(`nav-mod-${i}`);
+                if (sec) {
+                    if (i === modIndex) {
+                        sec.classList.remove('hidden');
+                    } else {
+                        sec.classList.add('hidden');
+                    }
+                }
+                if (tab) {
+                    if (i === modIndex) {
+                        tab.className = "nav-btn bg-accent text-white flex-1 lg:flex-none text-left py-2.5 px-3.5 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-2.5 shadow-sm";
+                    } else {
+                        tab.className = "nav-btn text-gray-700 hover:bg-gray-100 flex-1 lg:flex-none text-left py-2.5 px-3.5 rounded-xl text-xs sm:text-sm font-medium transition flex items-center gap-2.5";
+                    }
+                }
+            }
+            if (modIndex === 2) {
+                setTimeout(() => {
+                    selectMatrixLevel(currentMatrixLevel || 1);
+                }, 50);
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            renderKaTeXMath();
+        }
+
+
+        function openTutorial() {
+            const m = document.getElementById('tutorial-modal');
+            if (m) m.classList.remove('hidden');
+            renderKaTeXMath();
+        }
+        function closeTutorial() {
+            const m = document.getElementById('tutorial-modal');
+            if (m) m.classList.add('hidden');
+        }
+        function renderKaTeXMath() {
+            if (window.renderMathInElement) {
+                window.renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+
+
+        // Helper to render LaTeX dynamically inside updated DOM elements
+        function renderMathInContainer(element) {
+            if (window.renderMathInElement && element) {
+                window.renderMathInElement(element, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+
+        // =========================================================================
+        // MÓDULO 1: SIMULADOR DE BATERÍAS METABÓLICAS Y MASA
+        // =========================================================================
+        function setMassSimulation(grams) {
+            [1, 100, 1000].forEach(val => {
+                const btn = document.getElementById(`mass-btn-${val}`);
+                if (val === grams) {
+                    btn.className = "px-3 py-1 rounded-lg text-xs font-bold bg-white text-slate-900 shadow-sm transition-all";
+                } else {
+                    btn.className = "px-3 py-1 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all";
+                }
+            });
+
+            const carbKJ = grams * 17;
+            const carbKcal = (carbKJ / 4.184).toFixed(1);
+            const carbWater = grams * 2;
+            const carbTotalMass = grams + carbWater;
+
+            const lipidKJ = grams * 39;
+            const lipidKcal = (lipidKJ / 4.184).toFixed(1);
+
+            const formatUnit = (g) => g >= 1000 ? `${(g/1000).toFixed(1)} kg` : `${g} g`;
+
+            document.getElementById('carb-energy-val').textContent = `${carbKJ.toLocaleString('es-AR')} kJ (${Number(carbKcal).toLocaleString('es-AR')} kcal)`;
+            document.getElementById('carb-water-val').innerHTML = `+ ${formatUnit(carbWater)} de $\\text{H}_2\\text{O}$`;
+            document.getElementById('carb-total-weight').textContent = `${formatUnit(carbTotalMass)} húmedos`;
+
+            document.getElementById('lipid-energy-val').textContent = `${lipidKJ.toLocaleString('es-AR')} kJ (${Number(lipidKcal).toLocaleString('es-AR')} kcal)`;
+            document.getElementById('lipid-total-weight').textContent = `${formatUnit(grams)} compactos`;
+
+            renderMathInContainer(document.getElementById('carb-water-val'));
+        }
+
+        // =========================================================================
+        // MÓDULO 1.2: VISUALIZADOR DEL ESTADO DE OXIDACIÓN DEL CARBONO
+        // =========================================================================
+        const oxidationData = {
+            lipid: {
+                electrons: "6 e-",
+                badge: "Máximo flujo de NADH y FADH2 (~ 39 kJ/g)",
+                explanation: "<strong>Cadena Alifática Reducida ($-\\text{CH}_2-$):</strong> El carbono está unido a dos átomos de hidrógeno ($\\text{C}-\\text{H}$) y dos carbonos adyacentes. Como el carbono es más electronegativo que el hidrógeno, posee un <strong>estado de oxidación de $-2$</strong>. Esto le permite ceder hasta $6\\,\\text{e}^-$ hacia los transportadores $\\text{NAD}^+$ y $\\text{FAD}$ rumbo a la cadena respiratoria mitocondrial.",
+                svg: `
+                    <svg viewBox="0 0 360 130" class="w-full h-full">
+                        <defs>
+                            <marker id="arrow-amber" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                                <path d="M 0 1 L 10 5 L 0 9 z" fill="#fbbf24"/>
+                            </marker>
+                        </defs>
+                        <!-- Enlaces C-C y C-H -->
+                        <line x1="40" y1="65" x2="105" y2="65" stroke="#94a3b8" stroke-width="3" stroke-dasharray="4 4"/>
+                        <line x1="155" y1="65" x2="215" y2="65" stroke="#94a3b8" stroke-width="3" stroke-dasharray="4 4"/>
+                        <line x1="130" y1="22" x2="130" y2="45" stroke="#fbbf24" stroke-width="3"/>
+                        <line x1="130" y1="85" x2="130" y2="108" stroke="#fbbf24" stroke-width="3"/>
+                        <!-- Carbono central -->
+                        <circle cx="130" cy="65" r="22" fill="#f59e0b" stroke="#fde68a" stroke-width="2"/>
+                        <text x="130" y="69" text-anchor="middle" fill="#0f172a" font-weight="bold" font-size="14" font-family="monospace">C (-2)</text>
+                        <!-- Hidrógenos -->
+                        <circle cx="130" cy="14" r="11" fill="#1e293b" stroke="#fbbf24" stroke-width="2"/>
+                        <text x="130" y="18" text-anchor="middle" fill="#fde68a" font-size="11" font-weight="bold">H</text>
+                        <circle cx="130" cy="116" r="11" fill="#1e293b" stroke="#fbbf24" stroke-width="2"/>
+                        <text x="130" y="120" text-anchor="middle" fill="#fde68a" font-size="11" font-weight="bold">H</text>
+                        <!-- Flujo de electrones hacia mitocondria -->
+                        <path d="M 190 65 L 265 65" stroke="#fbbf24" stroke-width="3" class="animate-electron" marker-end="url(#arrow-amber)"/>
+                        <rect x="272" y="32" width="80" height="66" rx="10" fill="#1e3a8a" stroke="#60a5fa" stroke-width="2"/>
+                        <text x="312" y="55" text-anchor="middle" fill="#93c5fd" font-size="10" font-weight="bold">MITOCONDRIA</text>
+                        <text x="312" y="72" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">NADH + FADH2</text>
+                        <text x="312" y="88" text-anchor="middle" fill="#fbbf24" font-size="10" font-weight="bold">Alto ATP</text>
+                    </svg>
+                `
+            },
+            carb: {
+                electrons: "4 e-",
+                badge: "Carbono parcialmente oxidado (~ 17 kJ/g)",
+                explanation: "<strong>Carbono Hidroxilado ($-\\text{CH(OH)}-$):</strong> En los carbohidratos (glucosa/glucógeno), cada carbono ya posee un enlace covalente con un átomo de oxígeno altamente electronegativo ($-\\text{OH}$). Por ello su <strong>estado de oxidación promedio es $0$</strong> (está 'a medio camino' de oxidarse), rindiendo menos electrones ($4\\,\\text{e}^-$) por carbono y atrayendo capas de hidratación.",
+                svg: `
+                    <svg viewBox="0 0 360 130" class="w-full h-full">
+                        <defs>
+                            <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                                <path d="M 0 1 L 10 5 L 0 9 z" fill="#60a5fa"/>
+                            </marker>
+                        </defs>
+                        <line x1="40" y1="65" x2="105" y2="65" stroke="#94a3b8" stroke-width="3" stroke-dasharray="4 4"/>
+                        <line x1="155" y1="65" x2="215" y2="65" stroke="#94a3b8" stroke-width="3" stroke-dasharray="4 4"/>
+                        <line x1="130" y1="22" x2="130" y2="45" stroke="#60a5fa" stroke-width="3"/>
+                        <line x1="130" y1="85" x2="130" y2="105" stroke="#ef4444" stroke-width="3"/>
+                        <!-- Carbono central -->
+                        <circle cx="130" cy="65" r="22" fill="#2563eb" stroke="#bfdbfe" stroke-width="2"/>
+                        <text x="130" y="69" text-anchor="middle" fill="#ffffff" font-weight="bold" font-size="14" font-family="monospace">C (0)</text>
+                        <!-- Hidrógeno superior -->
+                        <circle cx="130" cy="14" r="11" fill="#1e293b" stroke="#60a5fa" stroke-width="2"/>
+                        <text x="130" y="18" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="bold">H</text>
+                        <!-- Grupo OH inferior -->
+                        <rect x="110" y="103" width="40" height="22" rx="6" fill="#dc2626"/>
+                        <text x="130" y="118" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">-OH</text>
+                        <!-- Flujo moderado -->
+                        <path d="M 190 65 L 265 65" stroke="#60a5fa" stroke-width="2.5" class="animate-electron" marker-end="url(#arrow-blue)"/>
+                        <rect x="272" y="32" width="80" height="66" rx="10" fill="#1e293b" stroke="#60a5fa" stroke-width="1.5"/>
+                        <text x="312" y="55" text-anchor="middle" fill="#93c5fd" font-size="10" font-weight="bold">MITOCONDRIA</text>
+                        <text x="312" y="72" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">Menor NADH</text>
+                        <text x="312" y="88" text-anchor="middle" fill="#60a5fa" font-size="10" font-weight="bold">17 kJ/g</text>
+                    </svg>
+                `
+            },
+            co2: {
+                electrons: "0 e- disponibles",
+                badge: "Totalmente oxidado (Estado +4)",
+                explanation: "<strong>Dióxido de Carbono ($\\text{O}=\\text{C}=\\text{O}$):</strong> Representa el estado de oxidación máximo del carbono ($+4$). Sus cuatro electrones de valencia están desplazados hacia los dos átomos de oxígeno mediante dobles enlaces. Ya no puede ceder electrones para generar $\\text{ATP}$ y es exhalado por los pulmones como producto final de la respiración celular.",
+                svg: `
+                    <svg viewBox="0 0 360 130" class="w-full h-full">
+                        <!-- Dobles enlaces C=O -->
+                        <line x1="100" y1="60" x2="155" y2="60" stroke="#ef4444" stroke-width="3"/>
+                        <line x1="100" y1="70" x2="155" y2="70" stroke="#ef4444" stroke-width="3"/>
+                        <line x1="205" y1="60" x2="260" y2="60" stroke="#ef4444" stroke-width="3"/>
+                        <line x1="205" y1="70" x2="260" y2="70" stroke="#ef4444" stroke-width="3"/>
+                        <!-- Oxígenos -->
+                        <circle cx="85" cy="65" r="20" fill="#dc2626"/>
+                        <text x="85" y="70" text-anchor="middle" fill="#fff" font-weight="bold" font-size="13">O</text>
+                        <circle cx="275" cy="65" r="20" fill="#dc2626"/>
+                        <text x="275" y="70" text-anchor="middle" fill="#fff" font-weight="bold" font-size="13">O</text>
+                        <!-- Carbono +4 -->
+                        <circle cx="180" cy="65" r="24" fill="#475569" stroke="#cbd5e1" stroke-width="2"/>
+                        <text x="180" y="70" text-anchor="middle" fill="#fff" font-weight="bold" font-size="14" font-family="monospace">C (+4)</text>
+                        <text x="180" y="115" text-anchor="middle" fill="#94a3b8" font-size="11">Producto terminal exhalado (Sin energía oxidativa remanente)</text>
+                    </svg>
+                `
+            }
+        };
+
+        function selectOxidationState(stateKey) {
+            ['lipid', 'carb', 'co2'].forEach(k => {
+                const btn = document.getElementById(`ox-btn-${k}`);
+                if (k === stateKey) {
+                    btn.className = "p-2.5 rounded-xl border-2 border-amber-500 bg-amber-50 text-left transition-all shadow-sm";
+                } else {
+                    btn.className = "p-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-left transition-all";
+                }
+            });
+
+            const data = oxidationData[stateKey];
+            document.getElementById('ox-svg-container').innerHTML = data.svg;
+            document.getElementById('ox-electrons-count').textContent = data.electrons;
+            document.getElementById('ox-atp-badge').textContent = data.badge;
+            const expBox = document.getElementById('ox-explanation-box');
+            expBox.innerHTML = data.explanation;
+            renderMathInContainer(expBox);
+        }
+
+        // =========================================================================
+        // MÓDULO 1.3: COMPARADOR DE ESCENARIO METABÓLICO
+        // =========================================================================
+        function switchMetabolicScenario(mode) {
+            const btnSprint = document.getElementById('scen-btn-sprint');
+            const btnFasting = document.getElementById('scen-btn-fasting');
+            const container = document.getElementById('scenario-display');
+
+            if (mode === 'sprint') {
+                btnSprint.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white shadow-sm transition-all";
+                btnFasting.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-slate-900 transition-all";
+                container.innerHTML = `
+                    <div class="p-4 rounded-xl bg-blue-50/70 border border-blue-200 space-y-1.5">
+                        <span class="text-[11px] font-bold uppercase text-blue-700">Sustrato Dominante</span>
+                        <h5 class="text-sm font-bold text-slate-900">Glucógeno Hepático y Muscular ($\\approx 17\\,\\text{kJ/g}$)</h5>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Gracias a sus múltiples ramificaciones hidrofílicas ($\\alpha-1,4$ y $\\alpha-1,6$), las enzimas glucógeno fosforilasas liberan glucosa-1-fosfato en segundos hacia la glucólisis.
+                        </p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                        <span class="text-[11px] font-bold uppercase text-slate-600">Ventaja Fisiológica</span>
+                        <h5 class="text-sm font-bold text-slate-900">Movilización Acuosa y Vía Anaeróbica</h5>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            La glucosa es hidrosoluble en el plasma sin requerir transportadores lipoproteicos ni albúmina, y puede generar $\\text{ATP}$ aún en hipoxia (glucólisis anaeróbica) y abastecer al cerebro.
+                        </p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-amber-50/60 border border-amber-200 space-y-1.5">
+                        <span class="text-[11px] font-bold uppercase text-amber-800">Limitación Termodinámica</span>
+                        <h5 class="text-sm font-bold text-slate-900">Agotamiento en $< 24\\,\\text{horas}$</h5>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Al retener $2\\,\\text{g}$ de $\\text{H}_2\\text{O}$ por gramo de glucógeno y rendir solo $17\\,\\text{kJ/g}$, las reservas corporales totales se agotan tras un día de ayuno o una maratón intensa.
+                        </p>
+                    </div>
+                `;
+            } else {
+                btnFasting.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 shadow-sm transition-all";
+                btnSprint.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-slate-900 transition-all";
+                container.innerHTML = `
+                    <div class="p-4 rounded-xl bg-amber-50/80 border border-amber-300 space-y-1.5">
+                        <span class="text-[11px] font-bold uppercase text-amber-800">Sustrato Dominante</span>
+                        <h5 class="text-sm font-bold text-slate-900">Triacilglicéridos en Adipocitos ($\\approx 39\\,\\text{kJ/g}$)</h5>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Estimulados por el glucagón y la adrenalina, las lipasas hidrolizan los enlaces éster liberando ácidos grasos libres hacia el hígado, músculo esquelético y miocardio.
+                        </p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-emerald-50/70 border border-emerald-200 space-y-1.5">
+                        <span class="text-[11px] font-bold uppercase text-emerald-800">Ventaja Evolutiva Clave</span>
+                        <h5 class="text-sm font-bold text-slate-900">Reserva Anhidra y Ultra-Compacta</h5>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Excluye por completo el agua de solvatación en la gota lipídica del adipocito, logrando una eficiencia másica <strong>$>6\\text{ veces superior}$</strong> al glucógeno hidratado para sostener semanas de ayuno.
+                        </p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                        <span class="text-[11px] font-bold uppercase text-blue-700">Cinética de Movilización</span>
+                        <h5 class="text-sm font-bold text-slate-900">Oxidación Aeróbica Estricta ($\\text{O}_2$)</h5>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Por su hidrofobicidad requieren viajar unidos a la albúmina sérica y dependen estrictamente de la mitocondria y del oxígeno molecular ($\\text{O}_2$) para la $\\beta$-oxidación.
+                        </p>
+                    </div>
+                `;
+            }
+            renderMathInContainer(container);
+        }
+
+        // =========================================================================
+        // MÓDULO 2: MATRIZ ESTRUCTURA -> PROPIEDAD -> FUNCIÓN (4 NIVELES)
+        // =========================================================================
+        const matrixLevelsData = {
+            1: {
+                badge: "Nivel 1 - Bloques Monoméricos",
+                title: "Ácidos Grasos: Cadenas Alifáticas y Configuración Cis",
+                formula: "$$\\text{CH}_3-(\\text{CH}_2)_n-\\text{COOH} \\quad | \\quad \\text{Saturado vs. Insaturado } (\\text{cis}-\\Delta^9)$$",
+                caption: "Geometría lineal (saturado) vs. acodada (insaturado cis)",
+                estructura: "Cadenas hidrocarbonadas alifáticas de número par de carbonos ($14$ a $24\\,\\text{C}$) con un grupo carboxilo terminal ($-\\text{COOH}$). Pueden ser <strong>rectas</strong> (solo enlaces simples $\\text{C}-\\text{C}$, saturados) o <strong>acodadas</strong> por la presencia de uno o más dobles enlaces en configuración $\\text{cis}$ ($\\text{C}=\\text{C}$), que introducen una curvatura rígida de $\\approx 30^\\circ$.",
+                propiedad: "Los ácidos grasos <strong>saturados son sólidos</strong> a temperatura ambiente/corporal porque sus cadenas lineales se empaquetan estrechamente maximizando las <em>fuerzas de dispersión de London</em>. Los <strong>insaturados son líquidos</strong> porque el codo $\\text{cis}$ genera impedimento estérico, reduce las atracciones de Van der Waals y disminuye el punto de fusión.",
+                funcion: "Actúan como <strong>bloques monoméricos de construcción</strong> para ensamblar lípidos complejos (triacilglicéridos y fosfolípidos) y como combustibles metabólicos directos de alto rendimiento mediante la $\\beta$-oxidación mitocondrial.",
+                svg: `
+                    <svg viewBox="0 0 380 210" class="w-full h-full">
+                        <!-- Saturado -->
+                        <text x="15" y="25" fill="#0f172a" font-size="11" font-weight="bold">Ácido Graso Saturado (ej. Esteárico 18:0) - Cadena Recta</text>
+                        <rect x="15" y="38" width="52" height="24" rx="6" fill="#dc2626"/>
+                        <text x="41" y="54" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">HOOC-</text>
+                        <polyline points="67,50 95,38 123,55 151,38 179,55 207,38 235,55 263,38 291,55 319,38 347,55" fill="none" stroke="#0f172a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                        <text x="355" y="55" fill="#64748b" font-size="10" font-family="monospace">-CH3</text>
+                        <text x="195" y="80" text-anchor="middle" fill="#059669" font-size="10" font-weight="bold"> Empaquetamiento denso = Fuerzas de London intensas (Sólido)</text>
+
+                        <!-- Separador -->
+                        <line x1="15" y1="98" x2="365" y2="98" stroke="#e2e8f0" stroke-width="1.5"/>
+
+                        <!-- Insaturado Cis -->
+                        <text x="15" y="120" fill="#0f172a" font-size="11" font-weight="bold">Ácido Graso Insaturado (ej. Oleico 18:1 cis-Delta9) - Cadena Acodada</text>
+                        <rect x="15" y="132" width="52" height="24" rx="6" fill="#dc2626"/>
+                        <text x="41" y="148" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">HOOC-</text>
+                        <polyline points="67,144 95,134 123,150 151,134 179,150 207,150" fill="none" stroke="#d97706" stroke-width="4" stroke-linecap="round"/>
+                        <!-- Doble enlace cis -->
+                        <line x1="179" y1="145" x2="207" y2="145" stroke="#f59e0b" stroke-width="2.5"/>
+                        <text x="193" y="138" text-anchor="middle" fill="#b45309" font-size="10" font-weight="bold">cis C=C</text>
+                        <!-- Rama acodada -->
+                        <polyline points="207,150 230,175 258,168 282,192 310,185 335,202" fill="none" stroke="#d97706" stroke-width="4" stroke-linecap="round"/>
+                        <text x="140" y="192" fill="#d97706" font-size="10" font-weight="bold">Quiebre ~30° -> Menor interacción (Líquido)</text>
+                    </svg>
+                `,
+                controls: `<div class="text-xs text-slate-600 bg-amber-50 border border-amber-200 rounded-xl p-2.5 text-center"><strong>Regla mnemotécnica UCCuyo:</strong> Sin dobles enlaces = <strong>S</strong>aturado = <strong>S</strong>ólido. Con pliegues $\\text{cis}$ = <strong>I</strong>nsaturado = <strong>I</strong>nestable al empaquetamiento (Líquido).</div>`
+            },
+            2: {
+                badge: "Nivel 2 - Reserva Energética Anhidra",
+                title: "Triacilglicéridos (Triglicéridos): Neutralidad e Hidrofobicidad",
+                formula: "$$\\text{Glicerol} + 3\\,\\text{R-COOH} \\xrightarrow{-3\\,\\text{H}_2\\text{O}} \\text{Triacilglicérido (3 enlaces éster)}$$",
+                caption: "Esterificación triple que anula los grupos -OH polares",
+                estructura: "Constituidos por un esqueleto de <strong>glicerol</strong> (un triol de tres carbonos) unido covalentemente mediante <strong>tres enlaces éster ($-\\text{COO}-$)</strong> a tres cadenas de ácidos grasos. La reacción de condensación elimina la polaridad de los tres grupos hidroxilo ($-\\text{OH}$) originales del glicerol.",
+                propiedad: "Al desaparecer los grupos $-\\text{OH}$ libres capaces de formar puentes de hidrógeno, resulta una <strong>molécula completamente neutra (apolar), hidrofóbica e insoluble en medio acuoso</strong>, que coalescen formando gotas lipídicas anhidras.",
+                funcion: "<strong>Almacenamiento celular de alta densidad energética ($\\approx 39\\,\\text{kJ/g}$)</strong> sin peso osmótico de agua en los adipocitos, además de proveer aislamiento térmico subcutáneo y amortiguación mecánica visceral.",
+                svg: `
+                    <svg viewBox="0 0 380 210" class="w-full h-full">
+                        <!-- Esqueleto de Glicerol -->
+                        <rect x="20" y="25" width="65" height="160" rx="10" fill="#1e3a8a" stroke="#3b82f6" stroke-width="2"/>
+                        <text x="52" y="100" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold" transform="rotate(-90 52 100)">GLICEROL (3 C)</text>
+
+                        <!-- 3 Enlaces Éster -->
+                        <rect x="98" y="38" width="68" height="28" rx="6" fill="#f59e0b"/>
+                        <text x="132" y="56" text-anchor="middle" fill="#0f172a" font-size="10" font-weight="bold">Éster (-COO-)</text>
+
+                        <rect x="98" y="91" width="68" height="28" rx="6" fill="#f59e0b"/>
+                        <text x="132" y="109" text-anchor="middle" fill="#0f172a" font-size="10" font-weight="bold">Éster (-COO-)</text>
+
+                        <rect x="98" y="144" width="68" height="28" rx="6" fill="#f59e0b"/>
+                        <text x="132" y="162" text-anchor="middle" fill="#0f172a" font-size="10" font-weight="bold">Éster (-COO-)</text>
+
+                        <!-- Conectores -->
+                        <line x1="85" y1="52" x2="98" y2="52" stroke="#94a3b8" stroke-width="3"/>
+                        <line x1="85" y1="105" x2="98" y2="105" stroke="#94a3b8" stroke-width="3"/>
+                        <line x1="85" y1="158" x2="98" y2="158" stroke="#94a3b8" stroke-width="3"/>
+
+                        <!-- 3 Colas de Ácidos Grasos -->
+                        <polyline points="166,52 195,42 225,60 255,42 285,60 315,42 345,58" fill="none" stroke="#d97706" stroke-width="4" stroke-linecap="round"/>
+                        <polyline points="166,105 195,95 225,113 255,95 285,113 315,95 345,111" fill="none" stroke="#d97706" stroke-width="4" stroke-linecap="round"/>
+                        <polyline points="166,158 195,148 225,166 255,148 285,172 315,165 345,182" fill="none" stroke="#d97706" stroke-width="4" stroke-linecap="round"/>
+
+                        <text x="260" y="25" text-anchor="middle" fill="#b45309" font-size="11" font-weight="bold">3 Cadenas Alifáticas Apolares (Sin -OH libres)</text>
+                    </svg>
+                `,
+                controls: `<div class="text-xs text-slate-600 bg-blue-50 border border-blue-200 rounded-xl p-2.5 text-center"><strong>Punto clave de examen:</strong> El glicerol libre es muy soluble en agua por sus tres $-\\text{OH}$, pero al esterificarse con $3$ ácidos grasos se bloquean todos los grupos polares, volviéndose <strong>$100\\%$ apolar (grasa neutra)</strong>.</div>`
+            },
+            3: {
+                badge: "Nivel 3 - Frontera y Compartimentalización Celular",
+                title: "Fosfolípidos: Dualidad Anfipática y Bicapa Lipídica",
+                formula: "$$\\text{Glicerol} + 2\\,\\text{Ácidos Grasos} + \\text{PO}_4^- - \\text{Alcohol Polar (Colina/Serina)}$$",
+                caption: "Cabeza hidrofílica iónica + 2 colas hidrofóbicas",
+                estructura: "Esqueleto de glicerol esterificado en $C_1$ y $C_2$ con <strong>dos colas hidrocarbonadas de ácidos grasos</strong> (una típicamente saturada y otra insaturada $\\text{cis}$) y en la tercera posición ($C_3$) unido a un <strong>grupo fosfato ($-\\text{PO}_4^-$) iónico/polar</strong> acoplado a un aminoalcohol.",
+                propiedad: "Poseen un <strong>carácter anfipático distintivo</strong>: una cabeza polar hidrofílica con carga eléctrica que forma puentes de hidrógeno e interacciones ion-dipolo con el agua, y dos colas apolares hidrofóbicas que la repelen.",
+                funcion: "Impulsados por el efecto hidrofóbico, experimentan <strong>ensamblaje espontáneo en bicapas lipídicas</strong> cerradas en medio acuoso, constituyendo la matriz estructural de todas las membranas biológicas y delimitando la frontera celular.",
+                svg: `
+                    <svg viewBox="0 0 380 210" class="w-full h-full">
+                        <!-- Fosfolípido Individual Izquierda -->
+                        <circle cx="80" cy="60" r="28" fill="#2563eb" stroke="#93c5fd" stroke-width="3"/>
+                        <text x="80" y="57" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">Cabeza Polar</text>
+                        <text x="80" y="70" text-anchor="middle" fill="#bfdbfe" font-size="9" font-family="monospace">-PO4- (Hidrofílica)</text>
+
+                        <!-- 2 Colas -->
+                        <polyline points="68,88 68,110 62,130 68,150 62,170 68,190" fill="none" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
+                        <polyline points="92,88 92,115 105,135 100,155 115,175 110,190" fill="none" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
+                        <text x="85" y="204" text-anchor="middle" fill="#b45309" font-size="10" font-weight="bold">2 Colas Apolares</text>
+
+                        <!-- Flecha de Autoensamblaje -->
+                        <text x="165" y="105" text-anchor="middle" fill="#475569" font-size="10" font-weight="bold">En H2O</text>
+                        <path d="M 140 115 L 190 115" stroke="#2563eb" stroke-width="2.5"/>
+
+                        <!-- Bicapa Derecha -->
+                        <rect x="205" y="18" width="155" height="22" rx="4" fill="#dbeafe"/>
+                        <text x="282" y="33" text-anchor="middle" fill="#1e40af" font-size="10" font-weight="bold">Medio Extracelular (H2O)</text>
+
+                        <!-- Cabezas superiores -->
+                        <g fill="#2563eb">
+                            <circle cx="225" cy="52" r="9"/><circle cx="248" cy="52" r="9"/><circle cx="271" cy="52" r="9"/><circle cx="294" cy="52" r="9"/><circle cx="317" cy="52" r="9"/><circle cx="340" cy="52" r="9"/>
+                        </g>
+                        <!-- Colas centrales hidrofóbicas -->
+                        <g stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round">
+                            <line x1="222" y1="61" x2="222" y2="95"/><line x1="228" y1="61" x2="232" y2="95"/>
+                            <line x1="245" y1="61" x2="245" y2="95"/><line x1="251" y1="61" x2="255" y2="95"/>
+                            <line x1="268" y1="61" x2="268" y2="95"/><line x1="274" y1="61" x2="278" y2="95"/>
+                            <line x1="291" y1="61" x2="291" y2="95"/><line x1="297" y1="61" x2="301" y2="95"/>
+                            <line x1="314" y1="61" x2="314" y2="95"/><line x1="320" y1="61" x2="324" y2="95"/>
+                            <line x1="337" y1="61" x2="337" y2="95"/><line x1="343" y1="61" x2="347" y2="95"/>
+
+                            <line x1="222" y1="135" x2="222" y2="102"/><line x1="228" y1="135" x2="232" y2="102"/>
+                            <line x1="245" y1="135" x2="245" y2="102"/><line x1="251" y1="135" x2="255" y2="102"/>
+                            <line x1="268" y1="135" x2="268" y2="102"/><line x1="274" y1="135" x2="278" y2="102"/>
+                            <line x1="291" y1="135" x2="291" y2="102"/><line x1="297" y1="135" x2="301" y2="102"/>
+                            <line x1="314" y1="135" x2="314" y2="102"/><line x1="320" y1="135" x2="324" y2="102"/>
+                            <line x1="337" y1="135" x2="337" y2="102"/><line x1="343" y1="135" x2="347" y2="102"/>
+                        </g>
+                        <!-- Cabezas inferiores -->
+                        <g fill="#2563eb">
+                            <circle cx="225" cy="144" r="9"/><circle cx="248" cy="144" r="9"/><circle cx="271" cy="144" r="9"/><circle cx="294" cy="144" r="9"/><circle cx="317" cy="144" r="9"/><circle cx="340" cy="144" r="9"/>
+                        </g>
+                        <rect x="205" y="160" width="155" height="22" rx="4" fill="#dbeafe"/>
+                        <text x="282" y="175" text-anchor="middle" fill="#1e40af" font-size="10" font-weight="bold">Citosol Intracelular (H2O)</text>
+                    </svg>
+                `,
+                controls: `<div class="text-xs text-slate-600 bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 text-center"><strong>Termodinámica de Membranas:</strong> La bicapa se cierra espontáneamente porque oculta las colas hidrofóbicas del agua, maximizando la entropía ($\\Delta S > 0$) de las moléculas de $\\text{H}_2\\text{O}$ circundantes.</div>`
+            },
+            4: {
+                badge: "Nivel 4 - Regulación Mecánica y Señalización",
+                title: "Esteroides: Núcleo de Ciclopentanoperhidrofenantreno",
+                formula: "$$\\text{Ciclopentanoperhidrofenantreno (Anillos A, B, C, D)} \\quad | \\quad \\text{Colesterol } (\\text{C}_{27}\\text{H}_{46}\\text{O})$$",
+                caption: "Sistema tetracíclico rígido, plano e intercalable",
+                estructura: "Carecen de colas de ácidos grasos y enlaces éster hidrolizables (lípidos insaponificables). Su arquitectura se basa en un <strong>sistema tetracíclico rígido de cuatro anillos hidrocarbonados fusionados</strong>: tres anillos de ciclohexano ($A, B, C$) y un anillo de ciclopentano ($D$), denominado <em>ciclopentanoperhidrofenantreno</em>.",
+                propiedad: "Es una <strong>molécula hidrofóbica plana, rígida y compacta</strong> (en el colesterol posee apenas un pequeño grupo $-\\text{OH}$ polar en $C_3$), lo que le permite intercalarse paralelamente entre las colas de ácidos grasos de los fosfolípidos.",
+                funcion: "<strong>Modulación de la fluidez y estabilidad mecánica de la membrana celular</strong> (el colesterol evita tanto la cristalización como la excesiva fluidez) y actúa como <strong>molécula madre precursora</strong> de todas las hormonas esteroideas (cortisol, aldosterona, testosterona, estradiol), vitamina D y ácidos biliares.",
+                svg: `
+                    <svg viewBox="0 0 380 210" class="w-full h-full">
+                        <!-- Grupo -OH en C3 -->
+                        <rect x="18" y="128" width="38" height="22" rx="6" fill="#2563eb"/>
+                        <text x="37" y="143" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">HO-</text>
+                        <line x1="56" y1="138" x2="78" y2="128" stroke="#2563eb" stroke-width="3"/>
+
+                        <!-- Anillo A -->
+                        <polygon points="78,96 106,80 134,96 134,128 106,144 78,128" fill="#fef3c7" stroke="#d97706" stroke-width="3"/>
+                        <text x="106" y="117" text-anchor="middle" fill="#92400e" font-weight="bold" font-size="14">A</text>
+
+                        <!-- Anillo B -->
+                        <polygon points="134,96 162,80 190,96 190,128 162,144 134,128" fill="#fef3c7" stroke="#d97706" stroke-width="3"/>
+                        <text x="162" y="117" text-anchor="middle" fill="#92400e" font-weight="bold" font-size="14">B</text>
+
+                        <!-- Anillo C -->
+                        <polygon points="190,64 218,48 246,64 246,96 218,112 190,96" fill="#fef3c7" stroke="#d97706" stroke-width="3"/>
+                        <text x="218" y="85" text-anchor="middle" fill="#92400e" font-weight="bold" font-size="14">C</text>
+
+                        <!-- Anillo D (Ciclopentano) -->
+                        <polygon points="246,64 280,54 298,80 280,106 246,96" fill="#fde68a" stroke="#b45309" stroke-width="3"/>
+                        <text x="270" y="85" text-anchor="middle" fill="#78350f" font-weight="bold" font-size="14">D</text>
+
+                        <!-- Cola isooctilo en C17 -->
+                        <polyline points="280,54 305,36 330,48 355,30" fill="none" stroke="#475569" stroke-width="3" stroke-linecap="round"/>
+
+                        <text x="190" y="175" text-anchor="middle" fill="#0f172a" font-size="11" font-weight="bold">Núcleo Tetracíclico Rígido: Ciclopentanoperhidrofenantreno</text>
+                        <text x="190" y="193" text-anchor="middle" fill="#64748b" font-size="10">3 Anillos Ciclohexano (A, B, C) + 1 Anillo Ciclopentano (D)</text>
+                    </svg>
+                `,
+                controls: `<div class="text-xs text-slate-600 bg-amber-50 border border-amber-200 rounded-xl p-2.5 text-center"><strong>Correlación Médica:</strong> A diferencia de los triacilglicéridos, el núcleo esteroideo <strong>no se degrada para producir $\\text{ATP}$</strong>; su función es puramente arquitectónica (membranas) y de señalización endocrina.</div>`
+            }
+        };
+
+        function selectMatrixLevel(level) {
+            [1, 2, 3, 4].forEach(idx => {
+                const tab = document.getElementById(`matrix-tab-${idx}`);
+                if (idx === level) {
+                    tab.className = "matrix-tab p-4 rounded-2xl border-2 border-amber-500 bg-amber-50/70 text-left transition-all shadow-sm";
+                } else {
+                    tab.className = "matrix-tab p-4 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-left transition-all";
+                }
+            });
+
+            const item = matrixLevelsData[level];
+            document.getElementById('matrix-level-badge').textContent = item.badge;
+            document.getElementById('matrix-level-title').textContent = item.title;
+
+            const formulaEl = document.getElementById('matrix-level-formula');
+            formulaEl.innerHTML = item.formula;
+            renderMathInContainer(formulaEl);
+
+            document.getElementById('matrix-svg-caption').textContent = item.caption;
+            document.getElementById('matrix-svg-stage').innerHTML = item.svg;
+
+            const ctrlEl = document.getElementById('matrix-interactive-controls');
+            ctrlEl.innerHTML = item.controls;
+            renderMathInContainer(ctrlEl);
+
+            const colE = document.getElementById('matrix-col-estructura');
+            const colP = document.getElementById('matrix-col-propiedad');
+            const colF = document.getElementById('matrix-col-funcion');
+
+            colE.innerHTML = item.estructura;
+            colP.innerHTML = item.propiedad;
+            colF.innerHTML = item.funcion;
+
+            renderMathInContainer(colE);
+            renderMathInContainer(colP);
+            renderMathInContainer(colF);
+        }
+
+        // =========================================================================
+        // MÓDULO 3: LABORATORIO DE RAZONAMIENTO CLÍNICO (SIMULADORES + PREGUNTAS)
+        // =========================================================================
+
+        // Panel 1: Empaquetamiento Mantequilla vs Aceite
+        function updatePackingSimulation(val) {
+            const num = Number(val);
+            const label = document.getElementById('packing-cis-label');
+            const dist = document.getElementById('packing-distance');
+            const tm = document.getElementById('packing-tm');
+            const svgBox = document.getElementById('packing-svg-box');
+
+            if (num === 0) {
+                label.textContent = "0% cis (Mantequilla - Sólida)";
+                dist.textContent = "Mínima (Orden Cristalino)";
+                tm.innerHTML = "$\\approx 63\\,^\\circ\\text{C}$ (Sólido)";
+                svgBox.innerHTML = `
+                    <svg viewBox="0 0 260 110" class="w-full h-full">
+                        <text x="130" y="16" text-anchor="middle" fill="#fbbf24" font-size="10" font-weight="bold">Cadenas Saturadas Lineales: Máximo Contacto de London</text>
+                        ${[35, 65, 95, 125, 155, 185, 215].map(x => `
+                            <circle cx="${x}" cy="32" r="6" fill="#3b82f6"/>
+                            <polyline points="${x},38 ${x-5},52 ${x+5},66 ${x-5},80 ${x+5},96" fill="none" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"/>
+                        `).join('')}
+                    </svg>
+                `;
+            } else if (num === 50) {
+                label.textContent = "50% cis (Margarina blanda / Semisólido)";
+                dist.textContent = "Intermedia (Parcialmente desordenada)";
+                tm.innerHTML = "$\\approx 28\\,^\\circ\\text{C}$ (Semisólido)";
+                svgBox.innerHTML = `
+                    <svg viewBox="0 0 260 110" class="w-full h-full">
+                        <text x="130" y="16" text-anchor="middle" fill="#93c5fd" font-size="10" font-weight="bold">Mezcla de Cadenas Rectas y Acodadas (cis)</text>
+                        <circle cx="45" cy="32" r="6" fill="#3b82f6"/>
+                        <polyline points="45,38 40,52 50,66 40,80 50,96" fill="none" stroke="#f59e0b" stroke-width="3.5"/>
+                        <circle cx="95" cy="32" r="6" fill="#3b82f6"/>
+                        <polyline points="95,38 90,55 112,72 130,94" fill="none" stroke="#fbbf24" stroke-width="3.5"/>
+                        <circle cx="155" cy="32" r="6" fill="#3b82f6"/>
+                        <polyline points="155,38 150,52 160,66 150,80 160,96" fill="none" stroke="#f59e0b" stroke-width="3.5"/>
+                        <circle cx="205" cy="32" r="6" fill="#3b82f6"/>
+                        <polyline points="205,38 200,55 225,74 242,94" fill="none" stroke="#fbbf24" stroke-width="3.5"/>
+                    </svg>
+                `;
+            } else {
+                label.textContent = "100% cis (Aceite de Oliva - Líquido)";
+                dist.textContent = "Amplia (Impedimento Estérico)";
+                tm.innerHTML = "$\\approx -6\\,^\\circ\\text{C}$ (Líquido en frío)";
+                svgBox.innerHTML = `
+                    <svg viewBox="0 0 260 110" class="w-full h-full">
+                        <text x="130" y="16" text-anchor="middle" fill="#34d399" font-size="10" font-weight="bold">Curvaturas cis-Delta9: Fuerzas de London Débiles (Fluido)</text>
+                        <circle cx="45" cy="32" r="6" fill="#3b82f6"/>
+                        <polyline points="45,38 42,58 70,74 88,95" fill="none" stroke="#34d399" stroke-width="3.5" stroke-linecap="round"/>
+                        <circle cx="115" cy="32" r="6" fill="#3b82f6"/>
+                        <polyline points="115,38 112,58 142,72 165,95" fill="none" stroke="#34d399" stroke-width="3.5" stroke-linecap="round"/>
+                        <circle cx="185" cy="32" r="6" fill="#3b82f6"/>
+                        <polyline points="185,38 182,58 215,72 240,95" fill="none" stroke="#34d399" stroke-width="3.5" stroke-linecap="round"/>
+                    </svg>
+                `;
+            }
+            renderMathInContainer(tm);
+        }
+
+        // Panel 2: Simulador de Lisis Celular
+        function setMembraneState(state) {
+            const btnNormal = document.getElementById('memb-btn-normal');
+            const btnLysis = document.getElementById('memb-btn-lysis');
+            const svgBox = document.getElementById('membrane-svg-box');
+            const banner = document.getElementById('membrane-status-banner');
+
+            if (state === 'amphipathic') {
+                btnNormal.className = "px-2.5 py-1 rounded-md text-[11px] font-bold bg-white text-emerald-700 shadow-sm transition-all";
+                btnLysis.className = "px-2.5 py-1 rounded-md text-[11px] font-semibold text-slate-700 hover:text-rose-700 transition-all";
+                banner.className = "bg-emerald-50 border border-emerald-200 text-emerald-900 p-2.5 rounded-lg text-xs";
+                banner.innerHTML = "<strong>Homeostasis Intacta:</strong> El núcleo hidrofóbico apolar actúa como barrera impermeable a iones y macromoléculas, preservando la vida celular.";
+                svgBox.innerHTML = `
+                    <svg viewBox="0 0 260 110" class="w-full h-full">
+                        <circle cx="130" cy="55" r="38" fill="#1e3a8a" stroke="#f59e0b" stroke-width="6" stroke-dasharray="6 2"/>
+                        <circle cx="130" cy="55" r="42" fill="none" stroke="#3b82f6" stroke-width="2.5"/>
+                        <text x="130" y="52" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">CÉLULA ÍNTEGRA</text>
+                        <text x="130" y="65" text-anchor="middle" fill="#93c5fd" font-size="9">[K+] alto intracelular</text>
+                    </svg>
+                `;
+            } else {
+                btnLysis.className = "px-2.5 py-1 rounded-md text-[11px] font-bold bg-rose-600 text-white shadow-sm transition-all";
+                btnNormal.className = "px-2.5 py-1 rounded-md text-[11px] font-semibold text-slate-700 hover:text-emerald-700 transition-all";
+                banner.className = "bg-rose-50 border border-rose-200 text-rose-900 p-2.5 rounded-lg text-xs";
+                banner.innerHTML = "<strong>¡COLAPSO Y LISIS CELULAR!</strong> Al ser hidrofílicos, los lípidos se disuelven como micelas sueltas en el agua extracelular e intracelular; desaparece la frontera celular.";
+                svgBox.innerHTML = `
+                    <svg viewBox="0 0 260 110" class="w-full h-full">
+                        <text x="130" y="20" text-anchor="middle" fill="#fb7185" font-size="10" font-weight="bold">DISOLUCIÓN EN MEDIO ACUOSO (LISIS)</text>
+                        <!-- Fragmentos dispersos -->
+                        <circle cx="55" cy="48" r="7" fill="#3b82f6"/><line x1="55" y1="55" x2="45" y2="70" stroke="#60a5fa" stroke-width="2"/>
+                        <circle cx="95" cy="78" r="7" fill="#3b82f6"/><line x1="95" y1="85" x2="110" y2="95" stroke="#60a5fa" stroke-width="2"/>
+                        <circle cx="165" cy="42" r="7" fill="#3b82f6"/><line x1="165" y1="49" x2="180" y2="62" stroke="#60a5fa" stroke-width="2"/>
+                        <circle cx="205" cy="75" r="7" fill="#3b82f6"/><line x1="205" y1="82" x2="195" y2="96" stroke="#60a5fa" stroke-width="2"/>
+                        <circle cx="130" cy="60" r="7" fill="#ef4444"/>
+                        <text x="130" y="95" text-anchor="middle" fill="#fda4af" font-size="9">Fuga masiva de organelas y solutos al intersticio</text>
+                    </svg>
+                `;
+            }
+        }
+
+        // Panel 3: Simulador Paradoja del Colesterol
+        function setCholesterolMode(mode) {
+            const btnPhys = document.getElementById('chol-btn-phys');
+            const btnPath = document.getElementById('chol-btn-path');
+            const badge = document.getElementById('chol-level-badge');
+            const svgBox = document.getElementById('cholesterol-svg-box');
+            const detail = document.getElementById('cholesterol-detail-text');
+
+            if (mode === 'physiological') {
+                btnPhys.className = "p-2 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow-sm transition-all";
+                btnPath.className = "p-2 rounded-lg text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-rose-50 transition-all";
+                badge.className = "font-mono font-bold text-emerald-700";
+                badge.textContent = "Fisiológico (Esencial)";
+                detail.innerHTML = "<strong>Necesidad Biológica Absoluta:</strong> Intercalado en la membrana regula su fluidez; en hígado origina <em>sales biliares</em> (emulsión de grasas) y en glándulas endocrinas origina <em>cortisol, aldosterona, estrógenos y testosterona</em>.";
+                svgBox.innerHTML = `
+                    <svg viewBox="0 0 260 110" class="w-full h-full">
+                        <!-- Luz arterial normal + red hormonal -->
+                        <circle cx="65" cy="55" r="34" fill="#450a0a" stroke="#ef4444" stroke-width="6"/>
+                        <text x="65" y="53" text-anchor="middle" fill="#fecaca" font-size="9" font-weight="bold">Arteria Sana</text>
+                        <text x="65" y="65" text-anchor="middle" fill="#fca5a5" font-size="8">Flujo laminar</text>
+                        <!-- Derivados -->
+                        <rect x="122" y="16" width="125" height="22" rx="5" fill="#1e293b" stroke="#34d399" stroke-width="1.5"/>
+                        <text x="184" y="30" text-anchor="middle" fill="#6ee7b7" font-size="9" font-weight="bold"> Estabilidad Membrana</text>
+                        <rect x="122" y="45" width="125" height="22" rx="5" fill="#1e293b" stroke="#fbbf24" stroke-width="1.5"/>
+                        <text x="184" y="59" text-anchor="middle" fill="#fde68a" font-size="9" font-weight="bold"> Hormonas Esteroideas</text>
+                        <rect x="122" y="74" width="125" height="22" rx="5" fill="#1e293b" stroke="#60a5fa" stroke-width="1.5"/>
+                        <text x="184" y="88" text-anchor="middle" fill="#93c5fd" font-size="9" font-weight="bold"> Sales Biliares y Vit. D</text>
+                    </svg>
+                `;
+            } else {
+                btnPath.className = "p-2 rounded-lg text-xs font-bold bg-rose-600 text-white shadow-sm transition-all";
+                btnPhys.className = "p-2 rounded-lg text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-emerald-50 transition-all";
+                badge.className = "font-mono font-bold text-rose-700";
+                badge.textContent = "Hipercolesterolemia (Aterogénesis)";
+                detail.innerHTML = "<strong>Patología Vascular:</strong> El exceso de colesterol $\\text{LDL}$ se infiltra y oxida en la túnica íntima arterial, formando <em>placas ateromatosas</em> con células espumosas que estrechan la luz vascular, causan rigidez arterial e <strong>isquemia miocárdica o cerebral</strong>.";
+                svgBox.innerHTML = `
+                    <svg viewBox="0 0 260 110" class="w-full h-full">
+                        <!-- Arteria con placa de ateroma -->
+                        <circle cx="65" cy="55" r="36" fill="#450a0a" stroke="#ef4444" stroke-width="6"/>
+                        <!-- Placa lipídica amarilla obstruyendo 75% de la luz -->
+                        <path d="M 35 38 Q 75 28 94 55 Q 75 88 35 72 Z" fill="#f59e0b" stroke="#fde68a" stroke-width="1.5"/>
+                        <text x="64" y="57" text-anchor="middle" fill="#0f172a" font-size="8" font-weight="bold">Placa LDL</text>
+                        <!-- Descripcion patológica -->
+                        <rect x="118" y="20" width="132" height="72" rx="8" fill="#450a0a" stroke="#f43f5e" stroke-width="1.5"/>
+                        <text x="184" y="38" text-anchor="middle" fill="#fda4af" font-size="9.5" font-weight="bold"> Placa Ateromatosa</text>
+                        <text x="184" y="55" text-anchor="middle" fill="#fecdd3" font-size="8.5">- Rigidez parietal arterial</text>
+                        <text x="184" y="69" text-anchor="middle" fill="#fecdd3" font-size="8.5">- Estenosis luminal crítica</text>
+                        <text x="184" y="83" text-anchor="middle" fill="#fbbf24" font-size="8.5" font-weight="bold">- Hipoxia / Isquemia Tisular</text>
+                    </svg>
+                `;
+            }
+            renderMathInContainer(detail);
+        }
+
+        // Sistema de Evaluación Formativa de los 3 Paneles Clínicos
+        const answeredPanels = { 1: false, 2: false, 3: false };
+
+        function checkClinicalAnswer(panelNum, option) {
+            const feedbackEl = document.getElementById(`feedback-panel-${panelNum}`);
+            feedbackEl.classList.remove('hidden');
+
+            const correctMap = { 1: 'A', 2: 'B', 3: 'A' };
+            const isCorrect = (option === correctMap[panelNum]);
+
+            if (isCorrect) {
+                answeredPanels[panelNum] = true;
+                feedbackEl.className = "p-3 rounded-xl text-xs leading-relaxed bg-emerald-50 border border-emerald-300 text-emerald-950";
+                if (panelNum === 1) {
+                    feedbackEl.innerHTML = " <strong>¡Correcto!</strong> La configuración $\\text{cis}$ introduce una curvatura rígida que separa las cadenas alifáticas vecinas, disminuyendo drásticamente las fuerzas atractivas de London y manteniendo fluido al aceite de oliva.";
+                } else if (panelNum === 2) {
+                    feedbackEl.innerHTML = " <strong>¡Exacto!</strong> La integridad de la membrana plasmática depende del efecto hidrofóbico. Sin colas apolares, los lípidos se solubilizarían en el agua intracelular y extracelular provocando lisis osmótica instantánea.";
+                } else if (panelNum === 3) {
+                    feedbackEl.innerHTML = " <strong>¡Excelente razonamiento biomédico!</strong> El colesterol no es un combustible energético, sino un modulador crítico de la bicapa y el precursor insustituible de todas las hormonas esteroideas y ácidos biliares.";
+                }
+            } else {
+                feedbackEl.className = "p-3 rounded-xl text-xs leading-relaxed bg-amber-50 border border-amber-300 text-amber-950";
+                feedbackEl.innerHTML = " <strong>Revisa el concepto estructural:</strong> Analiza cómo la polaridad o la geometría tridimensional (quiebres $\\text{cis}$, hidrofobicidad de bicapa o el anillo ciclopentanoperhidrofenantreno) determina el fenómeno fisiológico.";
+            }
+
+            renderMathInContainer(feedbackEl);
+
+            // Actualizar contador de dominio clínico en el header
+            const totalCorrect = Object.values(answeredPanels).filter(Boolean).length;
+            document.getElementById('clinical-score').textContent = `${totalCorrect}/3`;
+        }
+
+        // Inicialización al cargar la página
+        window.addEventListener('DOMContentLoaded', () => {
+            selectOxidationState('lipid');
+            switchMetabolicScenario('sprint');
+            selectMatrixLevel(1);
+            updatePackingSimulation(0);
+            setMembraneState('amphipathic');
+            setCholesterolMode('physiological');
+
+            // Renderizar todas las expresiones LaTeX iniciales
+            if (window.renderMathInElement) {
+                window.renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        });
+    
+    </script>
+</body>
+</html>
